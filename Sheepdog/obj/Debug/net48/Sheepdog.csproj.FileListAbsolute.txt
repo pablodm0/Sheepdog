@@ -1,0 +1,9 @@
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\bin\Debug\net48\Sheepdog.gha
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\bin\Debug\net48\Sheepdog.pdb
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.csproj.AssemblyReference.cache
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.GeneratedMSBuildEditorConfig.editorconfig
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.AssemblyInfoInputs.cache
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.AssemblyInfo.cs
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.csproj.CoreCompileInputs.cache
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.gha
+G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.pdb
