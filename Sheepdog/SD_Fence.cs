@@ -47,7 +47,43 @@ namespace Sheepdog
         {
             //throw new NotImplementedException();
         }
+        public override bool Write(GH_IO.Serialization.GH_IWriter writer)
+        {
+            // First add our own field.
+            writer.SetDouble("Width", ((SD_FenceAttributes)this.Attributes).Properties.Width);
+            writer.SetDrawingColor("Colour", ((SD_FenceAttributes)this.Attributes).Properties.Colour);
+            writer.SetString("Pattern", ((SD_FenceAttributes)this.Attributes).Properties.Pattern);
+            writer.SetSingle("NameSize", ((SD_FenceAttributes)this.Attributes).Properties.NameSize);
+            writer.SetString("NameVertical", ((SD_FenceAttributes)this.Attributes).Properties.NameVertical);
+            writer.SetString("NameHorizontal", ((SD_FenceAttributes)this.Attributes).Properties.NameHorizontal);
+            writer.SetString("NamePlacement", ((SD_FenceAttributes)this.Attributes).Properties.NamePlacement);
+            // Then call the base class implementation.
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IO.Serialization.GH_IReader reader)
+        {
+            // First read our own field.
+            double width = reader.GetDouble("Width");
+            Color colour = reader.GetDrawingColor("Colour");
+            string pattern = reader.GetString("Pattern");
+            float nameSize = reader.GetSingle("NameSize");
+            string nameVertical = reader.GetString("NameVertical");
+            string nameHorizontal = reader.GetString("NameHorizontal");
+            string namePlacement = reader.GetString("NamePlacement");
 
+            var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
+            tempProperties.Width = (float)width;
+            tempProperties.Colour = colour;
+            tempProperties.Pattern = pattern;
+            tempProperties.NameSize = nameSize;
+            tempProperties.NameVertical = nameVertical;
+            tempProperties.NameHorizontal = nameHorizontal;
+            tempProperties.NamePlacement = namePlacement;
+            ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
+
+            // Then call the base class implementation.
+            return base.Read(reader);
+        }
         public override bool AppendMenuItems(ToolStripDropDown menu)
         {
             this.Menu_AppendObjectName(menu);
@@ -102,6 +138,7 @@ namespace Sheepdog
 
         private void ColourPicker_ColourChanged(GH_ColourPicker sender, GH_ColourPickerEventArgs e)
         {
+            RecordUndoEvent("Change Colour");
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Colour = e.Colour;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -110,6 +147,8 @@ namespace Sheepdog
         }
         private void Menu_T4Clicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Lineweight to 4");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Width = 4;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -118,6 +157,8 @@ namespace Sheepdog
         }
         private void Menu_T8Clicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Lineweight to 8");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Width = 8;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -126,6 +167,8 @@ namespace Sheepdog
         }
         private void Menu_T12Clicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Lineweight to 12");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Width = 12;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -134,6 +177,8 @@ namespace Sheepdog
         }
         private void Menu_LineContinuousClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Linetype to Continuous");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Pattern = "Continuous";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -142,6 +187,8 @@ namespace Sheepdog
         }
         private void Menu_LineDashedClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Linetype to Dashed");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Pattern = "Dashed";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -150,6 +197,8 @@ namespace Sheepdog
         }
         private void Menu_LineDottedClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Linetype to Dotted");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Pattern = "Dotted";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -171,6 +220,8 @@ namespace Sheepdog
 
                     if (regex.IsMatch(input))
                     {
+                        RecordUndoEvent("Change Linetype to Custom");
+
                         var parts = input.Split(',').Select(part => decimal.Parse(part)).ToArray();
                         // Check if any of the numbers are 0
                         if (parts.Any(part => part == 0))
@@ -200,6 +251,7 @@ namespace Sheepdog
                         ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
                         Instances.RedrawCanvas();
+
                     }
                     else
                     {
@@ -226,6 +278,8 @@ namespace Sheepdog
                         Single size = Convert.ToSingle(input);
                         if (size > 0 && size <= 300)
                         {
+                            RecordUndoEvent("Change Name Size");
+
                             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
 
                             tempProperties.NameSize = size;
@@ -247,6 +301,8 @@ namespace Sheepdog
         }
         private void Menu_NameVerticalTopClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Name Vertical to Top");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.NameVertical = "Top";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -255,6 +311,8 @@ namespace Sheepdog
         }
         private void Menu_NameVerticalBottomClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Name Vertical to Bottom");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.NameVertical = "Bottom";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -263,6 +321,8 @@ namespace Sheepdog
         }
         private void Menu_NameHorizontalLeftClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Name Horizontal to Left");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.NameHorizontal = "Left";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -271,6 +331,8 @@ namespace Sheepdog
         }
         private void Menu_NameHorizontalCentreClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Name Horizontal to Centre");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.NameHorizontal = "Centre";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -279,6 +341,8 @@ namespace Sheepdog
         }
         private void Menu_NameHorizontalRightClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Name Horizontal to Right");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.NameHorizontal = "Right";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -287,6 +351,8 @@ namespace Sheepdog
         }
         private void Menu_NamePlacementInsideClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Name Placement to Inside");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.NamePlacement = "Inside";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
@@ -295,6 +361,8 @@ namespace Sheepdog
         }
         private void Menu_NamePlacementOutsideClicked(object sender, EventArgs e)
         {
+            RecordUndoEvent("Change Name Placement to Outside");
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.NamePlacement = "Outside";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;

@@ -36,19 +36,6 @@ namespace Grasshopper.Kernel.Special
             this.NamePlacement = settings.GetValue("NamePlacement", "Inside"); //NamePlacementStates.Outside;
         }
 
-        // Method to check if any property is set
-        public bool IsAnyPropertySet()
-        {
-            // Assuming default values are Color.Empty and 0 for Colour and Width respectively
-            // Adjust the conditions based on actual default values of your properties
-            if (Colour != Color.Empty || Width != 0)
-            {
-                return true;
-            }
-            // Check other properties similarly
-            return false;
-        }
-
         public float Width { get; set; }
 
         public Color Colour { get; set; }

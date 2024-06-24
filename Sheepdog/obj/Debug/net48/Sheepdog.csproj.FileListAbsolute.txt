@@ -7,3 +7,13 @@ G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.AssemblyInfo.cs
 G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.csproj.CoreCompileInputs.cache
 G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.gha
 G:\My Drive\Sheepdog\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.pdb
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\bin\Debug\net48\Sheepdog.gha
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\bin\Debug\net48\Sheepdog.pdb
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.csproj.AssemblyReference.cache
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.AssemblyInfoInputs.cache
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.AssemblyInfo.cs
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.csproj.CoreCompileInputs.cache
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.sourcelink.json
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.gha
+C:\Users\PabloDuránMillán\Code\Sheepdog\Sheepdog\obj\Debug\net48\Sheepdog.pdb
