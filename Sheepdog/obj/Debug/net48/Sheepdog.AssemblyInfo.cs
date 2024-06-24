@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Description of Sheepdog")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+ee8432134767ad16afb55ba4ac8f24256c7f13cb")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sheepdog")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sheepdog")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

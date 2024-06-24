@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\My Drive\\Sheepdog\\Sheepdog\\Sheepdog\\Sheepdog.csproj": {}
+    "C:\\Users\\PabloDuránMillán\\Code\\Sheepdog\\Sheepdog\\Sheepdog.csproj": {}
   },
   "projects": {
-    "G:\\My Drive\\Sheepdog\\Sheepdog\\Sheepdog\\Sheepdog.csproj": {
+    "C:\\Users\\PabloDuránMillán\\Code\\Sheepdog\\Sheepdog\\Sheepdog.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\My Drive\\Sheepdog\\Sheepdog\\Sheepdog\\Sheepdog.csproj",
+        "projectUniqueName": "C:\\Users\\PabloDuránMillán\\Code\\Sheepdog\\Sheepdog\\Sheepdog.csproj",
         "projectName": "Sheepdog",
-        "projectPath": "G:\\My Drive\\Sheepdog\\Sheepdog\\Sheepdog\\Sheepdog.csproj",
+        "projectPath": "C:\\Users\\PabloDuránMillán\\Code\\Sheepdog\\Sheepdog\\Sheepdog.csproj",
         "packagesPath": "C:\\Users\\PabloDuránMillán\\.nuget\\packages\\",
-        "outputPath": "G:\\My Drive\\Sheepdog\\Sheepdog\\Sheepdog\\obj\\",
+        "outputPath": "C:\\Users\\PabloDuránMillán\\Code\\Sheepdog\\Sheepdog\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
