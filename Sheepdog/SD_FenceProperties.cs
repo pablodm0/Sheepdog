@@ -27,7 +27,7 @@ namespace Grasshopper.Kernel.Special
         public void SetDefault()
         {
             GH_SettingsServer settings = new GH_SettingsServer("Sheepdog");
-            this.Width = settings.GetValue("Width", 3);
+            this.Width = settings.GetValue("Width", 8);
             this.Colour = settings.GetValue("Colour", Color.Black);
             this.Pattern = settings.GetValue("Pattern", "Continuous");
             this.NameSize = settings.GetValue("NameSize", 12);

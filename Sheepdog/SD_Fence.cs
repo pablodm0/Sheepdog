@@ -90,9 +90,16 @@ namespace Sheepdog
             GH_DocumentObject.Menu_AppendSeparator((ToolStrip)menu);
             GH_DocumentObject.Menu_AppendColourPicker(GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Colour").DropDown, ((SD_FenceAttributes)this.Attributes).Properties.Colour, new GH_DocumentObject.ColourEventHandler(this.ColourPicker_ColourChanged));
             ToolStripMenuItem toolStripMenuItemThickness = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Thickness");
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Thin", new EventHandler(this.Menu_ThinClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Medium", new EventHandler(this.Menu_MediumClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Thick", new EventHandler(this.Menu_ThickClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Thin", new EventHandler(this.Menu_WidthThinClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.Width == WidthThin);
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Medium", new EventHandler(this.Menu_WidthMediumClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.Width == WidthMedium);
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Thick", new EventHandler(this.Menu_WidthThickClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.Width == WidthThick);
+            // Add a new menu item for "Custom" option under "Linetype"
+            ToolStripMenuItem toolStripMenuItemCustomThickness = GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Custom");
+            // Create variable to hold current width to show it in the custom lineweight text box 
+            string currentWidth = ((SD_FenceAttributes)this.Attributes).Properties.Width.ToString();
+            // Add a text input item to the "Custom" option's dropdown for custom linetype input
+            GH_DocumentObject.Menu_AppendTextItem(toolStripMenuItemCustomThickness.DropDown, currentWidth, new GH_MenuTextBox.KeyDownEventHandler(this.Menu_WidthCustomKeyDown), null, true, 200, true);
+
 
             // For line type setting
             ToolStripMenuItem toolStripMenuItemLinetype = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Linetype");
@@ -116,17 +123,17 @@ namespace Sheepdog
             ToolStripMenuItem toolStripMenuItemNameSize = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Name Size");
             GH_DocumentObject.Menu_AppendTextItem(toolStripMenuItemNameSize.DropDown, (((SD_FenceAttributes)this.Attributes).Properties.NameSize).ToString(), new GH_MenuTextBox.KeyDownEventHandler(this.Menu_NameSizeKeyDown), null, true, 200, true);
 
-            // For name position setting
-            ToolStripMenuItem toolStripMenuNameVertical = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Name Vertical Position");
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNameVertical.DropDown, "Top", new EventHandler(this.Menu_NameVerticalTopClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNameVertical.DropDown, "Bottom", new EventHandler(this.Menu_NameVerticalBottomClicked));
-            ToolStripMenuItem toolStripMenuNameHorizontal = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Name Horizontal Position");
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNameHorizontal.DropDown, "Left", new EventHandler(this.Menu_NameHorizontalLeftClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNameHorizontal.DropDown, "Centre", new EventHandler(this.Menu_NameHorizontalCentreClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNameHorizontal.DropDown, "Right", new EventHandler(this.Menu_NameHorizontalRightClicked));
-            ToolStripMenuItem toolStripMenuNamePlacement = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Name Placement");
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePlacement.DropDown, "Inside", new EventHandler(this.Menu_NamePlacementInsideClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePlacement.DropDown, "Outside", new EventHandler(this.Menu_NamePlacementOutsideClicked));
+            // For name position settings
+            ToolStripMenuItem toolStripMenuNamePosition = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Name Position");
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Top", new EventHandler(this.Menu_NameVerticalTopClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Bottom", new EventHandler(this.Menu_NameVerticalBottomClicked));
+            GH_DocumentObject.Menu_AppendSeparator((ToolStrip)toolStripMenuNamePosition.DropDown);
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Left", new EventHandler(this.Menu_NameHorizontalLeftClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Centre", new EventHandler(this.Menu_NameHorizontalCentreClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Right", new EventHandler(this.Menu_NameHorizontalRightClicked));
+            GH_DocumentObject.Menu_AppendSeparator((ToolStrip)toolStripMenuNamePosition.DropDown);
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Inside", new EventHandler(this.Menu_NamePlacementInsideClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Outside", new EventHandler(this.Menu_NamePlacementOutsideClicked));
 
             // For default settings
             GH_DocumentObject.Menu_AppendSeparator((ToolStrip)menu);
@@ -145,35 +152,81 @@ namespace Sheepdog
 
             Instances.RedrawCanvas();
         }
-        private void Menu_ThinClicked(object sender, EventArgs e)
+
+        // Set Width Thin, Medium and Thick values 
+        public float WidthThin = 2;
+        public float WidthMedium = 8;
+        public float WidthThick = 14;
+
+        private void Menu_WidthThinClicked(object sender, EventArgs e)
         {
-            RecordUndoEvent("Change Lineweight to 2");
+            RecordUndoEvent("Change Lineweight to " + WidthThin);
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Width = 2;
+            tempProperties.Width = WidthThin;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
         }
-        private void Menu_MediumClicked(object sender, EventArgs e)
+        private void Menu_WidthMediumClicked(object sender, EventArgs e)
         {
-            RecordUndoEvent("Change Lineweight to 8");
+            RecordUndoEvent("Change Lineweight to " + WidthMedium);
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Width = 8;
+            tempProperties.Width = WidthMedium;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
         }
-        private void Menu_ThickClicked(object sender, EventArgs e)
+        private void Menu_WidthThickClicked(object sender, EventArgs e)
         {
-            RecordUndoEvent("Change Lineweight to 14");
+            RecordUndoEvent("Change Lineweight to " + WidthThick);
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Width = 14;
+            tempProperties.Width = WidthThick;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
+        }
+        private void Menu_WidthCustomKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                GH_MenuTextBox textBox = sender as GH_MenuTextBox;
+                if (textBox != null)
+                {
+                    string input = textBox.Text.Replace(" ", ""); // Remove all spaces
+
+                    // Regular expression to match 1 number (integer or decimal) 
+                    string regexPattern = @"^\d+(\.\d+)?$";
+                    System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(regexPattern);
+
+                    if (regex.IsMatch(input))
+                    {
+                        float width = Convert.ToSingle(input);
+                        // Check if number is 0
+                        if (width <= 0 || width > 300)
+                        {
+                            MessageBox.Show("Invalid input. Line Width must be between 0 and 300.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return; // Exit the method early
+                        }
+                        else
+                        {
+                            RecordUndoEvent("Change Line Width to Custom");
+
+                            var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
+                            tempProperties.Width = width;
+                            ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
+
+                            Instances.RedrawCanvas();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid input. Please input a number between 0 and 300.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
         private void Menu_LineContinuousClicked(object sender, EventArgs e)
         {
@@ -269,7 +322,7 @@ namespace Sheepdog
                 {
                     string input = textBox.Text.Replace(" ", ""); // Remove all spaces
 
-                    // Regular expression to match 1, 2, or 4 numbers (integers or decimals) separated by commas
+                    // Regular expression to match 1 number (integer or decimal) 
                     string regexPattern = @"^\d+(\.\d+)?$";
                     System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(regexPattern);
 
