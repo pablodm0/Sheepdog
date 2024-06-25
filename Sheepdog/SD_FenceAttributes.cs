@@ -13,46 +13,48 @@ namespace Sheepdog
     {
         //private Grasshopper.Kernel.Special.GH_Markup mark = new Grasshopper.Kernel.Special.GH_Markup();
         private GH_Document ghDocument;
-        public Size DefaultSize { get; private set; }
         //public DisplayExpiredEventHandler DisplayExpiredHandler;
         public SD_FenceAttributes(SD_Fence owner) : base(owner)
         {
             // Set value to ghDocument
             ghDocument = this.Owner.OnPingDocument();
 
-            // Set the DefaultSize
-            this.DefaultSize = new Size(100, 50);
-
             // Adjust the Bounds property to reflect the DefaultSize. Assuming the Pivot is the starting point for drawing
-            this.Bounds = new RectangleF(this.Pivot.X, this.Pivot.Y, DefaultSize.Width, DefaultSize.Height);
+            this.Bounds = new RectangleF(this.Pivot.X, this.Pivot.Y, this.DefaultSize.Width, this.DefaultSize.Height);
 
             // Initialize the properties and set default values
             SD_FenceProperties fenceProperties = new SD_FenceProperties();
             fenceProperties.SetDefault();
             this.Properties = fenceProperties;
-            
+
             GH_SettingsServer settings = new GH_SettingsServer("Sheepdog");
-            settings.SetValue("Width", 3f);
+            settings.SetValue("Width", this.Owner.WidthMedium);
             settings.SetValue("Colour", Color.Black);
             settings.SetValue("Pattern", "Continuous");
             settings.SetValue("NameSize", 12);
             settings.SetValue("NameVertical", "Top"); //NameVerticalStates.Top;
             settings.SetValue("NameHorizontal", "Left"); //NameHorizontalStates.Left;
             settings.SetValue("NamePlacement", "Inside"); //NamePlacementStates.Outside;
-            settings.WritePersistentSettings(); 
+            settings.WritePersistentSettings();
         }
 
         public SD_FenceProperties Properties { get; set; }
 
+        protected System.Drawing.Size DefaultSize => new System.Drawing.Size(500, 300);
 
         protected override System.Drawing.Size MinimumSize => new System.Drawing.Size(20, 20);
         protected override System.Windows.Forms.Padding SizingBorders => new System.Windows.Forms.Padding(6);
 
+        //protected RectangleF NameBBox { get; set; }
+
         protected override void Render(GH_Canvas canvas, System.Drawing.Graphics graphics, GH_CanvasChannel channel)
         {
             GH_Document ghDocument = this.Owner.OnPingDocument();
+            float zoomLevel = canvas.Viewport.Zoom;
             if (ghDocument != null)
             {
+                // PREPARE DRAWING TOOLS
+
                 // Set pen properties
                 System.Drawing.Color color = this.Properties.Colour;
                 System.Drawing.Brush brush = new System.Drawing.SolidBrush(color);
@@ -90,53 +92,83 @@ namespace Sheepdog
                 pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
                 pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 
-                // Draw rectangle in yellow when selected
-                if (this.Selected)
-                {
-                    // Draw a selection rectangle around the object
-                    Pen penSelected = (Pen) pen.Clone();
-                    penSelected.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid; 
-                    penSelected.Color = System.Drawing.Color.Yellow;
-                    penSelected.Width = penSelected.Width + 3;
-                    graphics.DrawRectangle(penSelected, this.Pivot.X, this.Pivot.Y, this.Bounds.Width, this.Bounds.Height);
-                    penSelected.Dispose(); // disposing of this pen causes an error "System.ArgumentException: 'Parameter is not valid.'", no idea why
-                }
-
-                // Draw rectangle
-                graphics.DrawRectangle(pen, this.Pivot.X, this.Pivot.Y, this.Bounds.Width, this.Bounds.Height);
-                pen.Dispose();
+                // DRAW NAME
 
                 // Call the method to find where to place the text and how to align it
                 var (textLocation, format) = CalculateTextLocationAndFormat();
 
-                // Display name)
-                System.Drawing.Font font = new System.Drawing.Font("Microsoft Sans Serif Regular",this.Properties.NameSize); // Adjust font and size
+                // Display name
+                System.Drawing.Font font = new System.Drawing.Font("Microsoft Sans Serif Regular", this.Properties.NameSize); // Adjust font and size
                 graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias; // Enable anti-aliasing for smoother text rendering
                 graphics.DrawString(this.Owner.NickName, font, brush, textLocation, format);
-            }
+                //System.Drawing.Size size = new System.Drawing.Size(5000, 5000);
+                //SizeF textSize = graphics.MeasureString(this.Owner.NickName, font, size, format, out int charactersFitted, out int linesFilled);
+                //NameBBox = new RectangleF(textLocation, textSize);
 
-            //base.Render(canvas, graphics, channel); //this controls whether the base component is shown or not. 
+                // DRAW SELECTED 
+
+                if (this.Selected)
+                {
+                    // Draw a selection rectangle around the object
+                    Pen penSelected = (Pen)pen.Clone();
+                    penSelected.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+                    penSelected.Color = System.Drawing.Color.Yellow;
+                    penSelected.Width = penSelected.Width + 3;
+                    graphics.DrawRectangle(penSelected, this.Pivot.X, this.Pivot.Y, this.Bounds.Width, this.Bounds.Height);
+                    penSelected.Dispose();
+                    //graphics.FillRectangle(System.Drawing.Brushes.Yellow, NameBBox);
+                }
+
+                // DRAW RECTANGLE
+
+                graphics.DrawRectangle(pen, this.Pivot.X, this.Pivot.Y, this.Bounds.Width, this.Bounds.Height);
+                pen.Dispose();
+
+                // DRAW HANDLES
+
+                // Draw resize handles when selected
+                if (this.Selected)
+                {
+                    // Draw circles in the corners
+                    float radius = 15 / zoomLevel;
+                    float centerX = this.Pivot.X - radius;
+                    float centerY = this.Pivot.Y - radius;
+                    graphics.FillEllipse(System.Drawing.Brushes.White, centerX, centerY, radius * 2, radius * 2); // Top-left corner
+                    graphics.FillEllipse(System.Drawing.Brushes.White, centerX, centerY + this.Bounds.Height, radius * 2, radius * 2); // Bottom-left corner
+                    graphics.FillEllipse(System.Drawing.Brushes.White, centerX + this.Bounds.Width, centerY, radius * 2, radius * 2); // Top-right corner
+                    graphics.FillEllipse(System.Drawing.Brushes.White, centerX + this.Bounds.Width, centerY + this.Bounds.Height, radius * 2, radius * 2); // Bottom-right corner
+
+                    // Draw circle in the middle of the edges
+                    float middleX = this.Pivot.X + this.Bounds.Width / 2;
+                    float middleY = this.Pivot.Y + this.Bounds.Height / 2;
+                    graphics.FillEllipse(System.Drawing.Brushes.White, middleX - radius, this.Pivot.Y - radius, radius * 2, radius * 2); // Top edge
+                    graphics.FillEllipse(System.Drawing.Brushes.White, middleX - radius, this.Pivot.Y + this.Bounds.Height - radius, radius * 2, radius * 2); // Bottom edge
+                    graphics.FillEllipse(System.Drawing.Brushes.White, this.Pivot.X - radius, middleY - radius, radius * 2, radius * 2); // Left edge
+                    graphics.FillEllipse(System.Drawing.Brushes.White, this.Pivot.X + this.Bounds.Width - radius, middleY - radius, radius * 2, radius * 2); // Right edge
+                }
+            }
+            //base.Render(canvas, graphics, channel); // this controls whether the base component is shown or not. 
         }
 
         public override bool IsPickRegion(PointF point) // this function defines the pick region when clicking
         {
 
-            float width2 = 100;//(this.Properties.Width / 2) + 20; // define half the lineweight to inflate by this amount
+            float width = (this.Properties.Width / 2) + 20; // define half the lineweight to inflate by this amount
 
             // Create a copy of the bounds
             RectangleF outerBounds = this.Bounds;
 
             // Inflate the bounds by 5 units in all directions
-            outerBounds.Inflate(width2, width2);
+            outerBounds.Inflate(width, width);
 
             // Create a smaller rectangle that represents the inner bounds
             RectangleF innerBounds = this.Bounds;
 
             // Shrink the bounds in all directions
-            innerBounds.Inflate(-width2, -width2);
+            innerBounds.Inflate(-width, -width);
 
             // Check if the point is within the expanded bounds but not within the original bounds
-            if (outerBounds.Contains(point) && !innerBounds.Contains(point))
+            if (outerBounds.Contains(point) && !innerBounds.Contains(point)) //|| NameBBox.Contains(point))
             {
                 return true;
             }
