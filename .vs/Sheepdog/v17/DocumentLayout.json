@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|solutionrelative:sheepdog\\sd_fenceattributes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|c:\\users\\pablodur\u00E1nmill\u00E1n\\code\\sheepdog\\sheepdog\\sd_fence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|solutionrelative:sheepdog\\sd_fence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|c:\\users\\pablodur\u00E1nmill\u00E1n\\code\\sheepdog\\sheepdog\\sheepdog.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|solutionrelative:sheepdog\\sheepdog.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|c:\\users\\pablodur\u00E1nmill\u00E1n\\code\\sheepdog\\sheepdog\\sd_fenceproperties.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|solutionrelative:sheepdog\\sd_fenceproperties.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|c:\\users\\pablodur\u00E1nmill\u00E1n\\code\\sheepdog\\sheepdog\\sd_fence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{99BB3F57-4751-46DE-8AD1-EFF34FAFFA60}|Sheepdog\\Sheepdog.csproj|solutionrelative:sheepdog\\sd_fence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,13 +30,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "SD_Fence.cs",
               "DocumentMoniker": "C:\\Users\\PabloDur\u00E1nMill\u00E1n\\Code\\Sheepdog\\Sheepdog\\SD_Fence.cs",
               "RelativeDocumentMoniker": "Sheepdog\\SD_Fence.cs",
               "ToolTip": "C:\\Users\\PabloDur\u00E1nMill\u00E1n\\Code\\Sheepdog\\Sheepdog\\SD_Fence.cs",
               "RelativeToolTip": "Sheepdog\\SD_Fence.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAF8BAABQAAAA",
+              "ViewState": "AQIAAEwAAAAAAAAAAAAIwGIAAAB/AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-12T09:38:55.114Z",
               "EditorCaption": ""
@@ -49,14 +49,14 @@
               "RelativeDocumentMoniker": "Sheepdog\\SD_FenceAttributes.cs",
               "ToolTip": "C:\\Users\\PabloDur\u00E1nMill\u00E1n\\Code\\Sheepdog\\Sheepdog\\SD_FenceAttributes.cs",
               "RelativeToolTip": "Sheepdog\\SD_FenceAttributes.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAAA4AAAAnAAAA",
+              "ViewState": "AQIAAGgAAAAAAAAAAAAswIQAAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-14T14:49:03.874Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "SD_FenceProperties.cs",
               "DocumentMoniker": "C:\\Users\\PabloDur\u00E1nMill\u00E1n\\Code\\Sheepdog\\Sheepdog\\SD_FenceProperties.cs",
               "RelativeDocumentMoniker": "Sheepdog\\SD_FenceProperties.cs",
@@ -64,12 +64,11 @@
               "RelativeToolTip": "Sheepdog\\SD_FenceProperties.cs",
               "ViewState": "AQIAABgAAAAAAAAAAAAAACQAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T09:41:12.048Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-12T09:41:12.048Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Sheepdog.csproj",
               "DocumentMoniker": "C:\\Users\\PabloDur\u00E1nMill\u00E1n\\Code\\Sheepdog\\Sheepdog\\Sheepdog.csproj",
               "RelativeDocumentMoniker": "Sheepdog\\Sheepdog.csproj",
@@ -77,8 +76,7 @@
               "RelativeToolTip": "Sheepdog\\Sheepdog.csproj",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2023-09-26T12:41:14.805Z",
-              "EditorCaption": ""
+              "WhenOpened": "2023-09-26T12:41:14.805Z"
             }
           ]
         }

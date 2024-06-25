@@ -90,9 +90,9 @@ namespace Sheepdog
             GH_DocumentObject.Menu_AppendSeparator((ToolStrip)menu);
             GH_DocumentObject.Menu_AppendColourPicker(GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Colour").DropDown, ((SD_FenceAttributes)this.Attributes).Properties.Colour, new GH_DocumentObject.ColourEventHandler(this.ColourPicker_ColourChanged));
             ToolStripMenuItem toolStripMenuItemThickness = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Thickness");
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "4", new EventHandler(this.Menu_T4Clicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "8", new EventHandler(this.Menu_T8Clicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "12", new EventHandler(this.Menu_T12Clicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Thin", new EventHandler(this.Menu_ThinClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Medium", new EventHandler(this.Menu_MediumClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemThickness.DropDown, "Thick", new EventHandler(this.Menu_ThickClicked));
 
             // For line type setting
             ToolStripMenuItem toolStripMenuItemLinetype = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Linetype");
@@ -145,17 +145,17 @@ namespace Sheepdog
 
             Instances.RedrawCanvas();
         }
-        private void Menu_T4Clicked(object sender, EventArgs e)
+        private void Menu_ThinClicked(object sender, EventArgs e)
         {
-            RecordUndoEvent("Change Lineweight to 4");
+            RecordUndoEvent("Change Lineweight to 2");
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Width = 4;
+            tempProperties.Width = 2;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
         }
-        private void Menu_T8Clicked(object sender, EventArgs e)
+        private void Menu_MediumClicked(object sender, EventArgs e)
         {
             RecordUndoEvent("Change Lineweight to 8");
 
@@ -165,12 +165,12 @@ namespace Sheepdog
 
             Instances.RedrawCanvas();
         }
-        private void Menu_T12Clicked(object sender, EventArgs e)
+        private void Menu_ThickClicked(object sender, EventArgs e)
         {
-            RecordUndoEvent("Change Lineweight to 12");
+            RecordUndoEvent("Change Lineweight to 14");
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Width = 12;
+            tempProperties.Width = 14;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();

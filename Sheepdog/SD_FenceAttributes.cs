@@ -118,21 +118,22 @@ namespace Sheepdog
             //base.Render(canvas, graphics, channel); //this controls whether the base component is shown or not. 
         }
 
-        public override bool IsPickRegion(System.Drawing.PointF point) // this function defines the pick region when clicking
+        public override bool IsPickRegion(PointF point) // this function defines the pick region when clicking
         {
-            // Create a copy of the bounds
-            System.Drawing.RectangleF outerBounds = this.Bounds;
 
-            float width = this.Properties.Width / 2; // define half the lineweight to inflate by this amount
+            float width2 = 100;//(this.Properties.Width / 2) + 20; // define half the lineweight to inflate by this amount
+
+            // Create a copy of the bounds
+            RectangleF outerBounds = this.Bounds;
 
             // Inflate the bounds by 5 units in all directions
-            outerBounds.Inflate(width, width);
+            outerBounds.Inflate(width2, width2);
 
             // Create a smaller rectangle that represents the inner bounds
-            System.Drawing.RectangleF innerBounds = this.Bounds;
+            RectangleF innerBounds = this.Bounds;
 
-            // Inflate the bounds by 5 units in all directions
-            innerBounds.Inflate(-width, -width);
+            // Shrink the bounds in all directions
+            innerBounds.Inflate(-width2, -width2);
 
             // Check if the point is within the expanded bounds but not within the original bounds
             if (outerBounds.Contains(point) && !innerBounds.Contains(point))
@@ -144,10 +145,10 @@ namespace Sheepdog
                 return false;
             }
         }
-        public override bool IsPickRegion(System.Drawing.RectangleF box, GH_PickBox method) // this function defines the pick region for a selection box
+        public override bool IsPickRegion(RectangleF box, GH_PickBox method) // this function defines the pick region for a selection box
         {
             // Create a copy of the bounds
-            System.Drawing.RectangleF outerBounds = this.Bounds;
+            RectangleF outerBounds = this.Bounds;
 
             // Check if the point is within the expanded bounds but not within the original bounds
             if (outerBounds.IntersectsWith(box) && !outerBounds.Contains(box))
