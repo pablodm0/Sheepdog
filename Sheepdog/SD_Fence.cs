@@ -125,15 +125,15 @@ namespace Sheepdog
 
             // For name position settings
             ToolStripMenuItem toolStripMenuNamePosition = GH_DocumentObject.Menu_AppendItem((ToolStrip)menu, "Name Position");
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Top", new EventHandler(this.Menu_NameVerticalTopClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Bottom", new EventHandler(this.Menu_NameVerticalBottomClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Top", new EventHandler(this.Menu_NameVerticalTopClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.NameVertical == "Top");
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Bottom", new EventHandler(this.Menu_NameVerticalBottomClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.NameVertical == "Bottom");
             GH_DocumentObject.Menu_AppendSeparator((ToolStrip)toolStripMenuNamePosition.DropDown);
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Left", new EventHandler(this.Menu_NameHorizontalLeftClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Centre", new EventHandler(this.Menu_NameHorizontalCentreClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Right", new EventHandler(this.Menu_NameHorizontalRightClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Left", new EventHandler(this.Menu_NameHorizontalLeftClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.NameHorizontal == "Left");
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Centre", new EventHandler(this.Menu_NameHorizontalCentreClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.NameHorizontal == "Centre");
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Right", new EventHandler(this.Menu_NameHorizontalRightClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.NameHorizontal == "Right");
             GH_DocumentObject.Menu_AppendSeparator((ToolStrip)toolStripMenuNamePosition.DropDown);
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Inside", new EventHandler(this.Menu_NamePlacementInsideClicked));
-            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Outside", new EventHandler(this.Menu_NamePlacementOutsideClicked));
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Inside", new EventHandler(this.Menu_NamePlacementInsideClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.NamePlacement == "Inside");
+            GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuNamePosition.DropDown, "Outside", new EventHandler(this.Menu_NamePlacementOutsideClicked), true, ((SD_FenceAttributes)this.Attributes).Properties.NamePlacement == "Outside");
 
             // For default settings
             GH_DocumentObject.Menu_AppendSeparator((ToolStrip)menu);
