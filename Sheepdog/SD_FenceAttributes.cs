@@ -5,7 +5,8 @@ using Grasshopper.Kernel.Attributes;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel.Special;
-using GH_IO.Serialization;
+//using GH_IO.Serialization;
+using System;
 
 namespace Sheepdog
 {
@@ -60,36 +61,10 @@ namespace Sheepdog
                 System.Drawing.Brush brush = new System.Drawing.SolidBrush(color);
                 System.Drawing.Pen pen = new System.Drawing.Pen(brush, this.Properties.Width);
 
-                // Set linetype
-                if (this.Properties.Pattern == "Continuous")
-                {
-                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-                }
-                else if (this.Properties.Pattern == "Dashed")
-                {
-                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                }
-                else if (this.Properties.Pattern == "Dotted")
-                {
-                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-                }
-                else if (this.Properties.Pattern.Contains("Custom"))
-                {
-                    // Extract the numbers after "Custom: "
-                    var patternData = this.Properties.Pattern.Replace("Custom: ", "");
-                    var parts = patternData.Split(',').Select(p => float.Parse(p.Trim())).ToArray();
-
-                    // Use the extracted numbers for the DashPattern
-                    pen.DashPattern = parts;
-                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Custom;
-                }
-                else
-                {
-                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-                }
-
                 // Set other properties
                 pen.DashCap = System.Drawing.Drawing2D.DashCap.Round;
+                pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
                 pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 
                 // DRAW NAME
@@ -121,7 +96,7 @@ namespace Sheepdog
 
                 // DRAW RECTANGLE
 
-                graphics.DrawRectangle(pen, this.Pivot.X, this.Pivot.Y, this.Bounds.Width, this.Bounds.Height);
+                DrawNiceRectangle(graphics, pen, this.Pivot.X, this.Pivot.Y, this.Bounds.Width, this.Bounds.Height);
                 pen.Dispose();
 
                 // DRAW HANDLES
@@ -149,6 +124,101 @@ namespace Sheepdog
             }
             //base.Render(canvas, graphics, channel); // this controls whether the base component is shown or not. 
         }
+        private void DrawNiceRectangle(Graphics graphics, Pen pen, float x, float y, float width, float height)
+        {
+            if (this.Properties.Pattern == "Continuous")
+            {
+                graphics.DrawRectangle(pen, x, y, width, height);
+                return;
+            }
+
+            else
+            {
+                // Extract the numbers after "Custom: "
+                var patternData = this.Properties.Pattern.Replace("[", "").Replace("]", ""); // remove the []
+                var parts = patternData.Split(',').Select(p => float.Parse(p.Trim())).ToArray();
+
+                var adjustedPatternX = AdjustPattern(parts, width);
+                var adjustedPatternY = AdjustPattern(parts, height);
+
+                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Custom;
+
+                // Use the adjusted pattern for X for the DashPattern
+                pen.DashPattern = adjustedPatternX;
+
+                // Draw the four lines of the rectangle
+                //   Horizontal lines
+                graphics.DrawLine(pen, x, y, x + width, y); // Top line
+                graphics.DrawLine(pen, x, y + height, x + width, y + height); // Bottom line
+
+                // Use the adjusted pattern for Y for the DashPattern
+                pen.DashPattern = adjustedPatternY;
+
+                //   Vertical lines
+                graphics.DrawLine(pen, x, y, x, y + height); // Left line
+                graphics.DrawLine(pen, x + width, y, x + width, y + height); // Right line
+
+                System.Drawing.Font font = new System.Drawing.Font("Microsoft Sans Serif Regular", this.Properties.NameSize); // Adjust font and size
+                System.Drawing.Brush brush = new System.Drawing.SolidBrush(Color.White);
+                StringFormat format = new StringFormat();
+
+
+                // Insert a point with coordinates x, y
+                PointF point = new PointF(x, y);
+                string DebugString = "X: " + string.Join(", ", adjustedPatternX) + "  ¦ Y: " + string.Join(", ", adjustedPatternY);
+                graphics.DrawString(DebugString, font, brush, point, format);
+            }
+        }
+        /*
+        public static float[] AdjustDashPattern(float[] dashPattern, float lineLength)
+        {
+            // Calculate the total length of one cycle (dash + space)
+            float cycleLength = dashPattern.Sum();
+            float halfCycleLength = (dashPattern[0] + dashPattern[1]) / 2;
+
+            // Calculate how many full cycles can fit into the line
+            int numCycles = (int)(lineLength / cycleLength);
+
+            // Calculate the new length of the dash and space for the current number of cycles
+            float newCycleLength = lineLength / numCycles;
+            float ratio = newCycleLength / cycleLength;
+            float[] adjustedPattern = dashPattern.Select(x => x * ratio).ToArray();
+
+            // Calculate how many full cycles can fit into the line
+            int numCyclesHalf = (int)(lineLength / (cycleLength + halfCycleLength));
+
+            // Calculate the new length of the dash and space for the current number of cycles
+            float newCycleLengthHalf = lineLength / numCyclesHalf;
+            float ratioHalf = newCycleLengthHalf / (cycleLength + halfCycleLength);
+            float[] adjustedPatternHalf = dashPattern.Select(x => x * ratioHalf).ToArray();
+
+            // Calculate the difference between the input pattern and the two adjusted patterns
+            float diff = dashPattern.Zip(adjustedPattern, (x, y) => Math.Abs(x - y)).Sum();
+            float diffHalf = dashPattern.Zip(adjustedPatternHalf, (x, y) => Math.Abs(x - y)).Sum();
+
+            if (diff < diffHalf)
+            {
+                // Return the adjusted pattern that is closest to the input pattern
+                return adjustedPattern;
+            }
+            else
+            {
+                return adjustedPatternHalf;
+            }
+          
+        }*/
+
+        public static float[] AdjustPattern(float[] dashPattern, float lineLength)
+        {
+            float numCycles = (lineLength - dashPattern[0]) / (dashPattern.Sum());
+            int numCyclesInt = (int)Math.Round(numCycles);
+            float ratio = (lineLength) / (dashPattern.Sum() * numCyclesInt + dashPattern[0]);
+            float[] adjustedPattern = dashPattern.Select(x => x * ratio).ToArray();
+            Console.WriteLine(ratio);
+            return adjustedPattern;
+        }
+
+
 
         public override bool IsPickRegion(PointF point) // this function defines the pick region when clicking
         {

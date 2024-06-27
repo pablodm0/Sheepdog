@@ -242,8 +242,12 @@ namespace Sheepdog
         {
             RecordUndoEvent("Change Linetype to Dashed");
 
+            float w = ((SD_FenceAttributes)this.Attributes).Properties.Width;
+
+            string pattern = "[10,10,10,10]";//$"[{3*w},{3*w},{3*w},{3*w}]";
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Pattern = "Dashed";
+            tempProperties.Pattern = pattern;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
@@ -252,8 +256,12 @@ namespace Sheepdog
         {
             RecordUndoEvent("Change Linetype to Dotted");
 
+            float w = ((SD_FenceAttributes)this.Attributes).Properties.Width;
+
+            string pattern = "[3,3,3,3]";//$"[{w},{w},{w},{w}]";
+
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Pattern = "Dotted";
+            tempProperties.Pattern = pattern;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
