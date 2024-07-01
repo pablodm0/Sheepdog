@@ -43,9 +43,9 @@ namespace Sheepdog
 
         public SD_FenceProperties Properties { get; set; }
 
-        protected System.Drawing.Size DefaultSize => new System.Drawing.Size(240, 240);
+        protected System.Drawing.Size DefaultSize => new System.Drawing.Size(300, 300);
 
-        protected override System.Drawing.Size MinimumSize => new System.Drawing.Size(50, 50);
+        protected override System.Drawing.Size MinimumSize => new System.Drawing.Size(150, 150);
         protected override System.Windows.Forms.Padding SizingBorders => new System.Windows.Forms.Padding(6);
 
         //protected RectangleF NameBBox { get; set; }
@@ -158,15 +158,6 @@ namespace Sheepdog
                 //   Vertical lines
                 graphics.DrawLine(pen, x, y, x, y + height + pen.Width); // Left line
                 graphics.DrawLine(pen, x + width, y, x + width, y + height + pen.Width); // Right line
-
-                /*System.Drawing.Font font = new System.Drawing.Font("Microsoft Sans Serif Regular", this.Properties.NameSize); // Adjust font and size
-                System.Drawing.Brush brush = new System.Drawing.SolidBrush(Color.White);
-                StringFormat format = new StringFormat();
-
-                // Insert a point with coordinates x, y
-                PointF point = new PointF(x, y);
-                string DebugString = "X: " + string.Join(", ", adjustedPatternX) + "  ¦ Y: " + string.Join(", ", adjustedPatternY);
-                graphics.DrawString(DebugString, font, brush, point, format);*/
             }
         }
 

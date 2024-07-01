@@ -316,11 +316,12 @@ namespace Sheepdog
                     {
                         RecordUndoEvent("Change Linetype to Custom");
 
-                        var parts = input.Split(',').Select(part => decimal.Parse(part)).ToArray();
-                        // Check if any of the numbers are 0
-                        if (parts.Any(part => part == 0))
+                        var parts = input.Split(',').Select(part => float.Parse(part)).ToArray();
+                        // Check if any of the numbers below the line width
+                        var width = ((SD_FenceAttributes)this.Attributes).Properties.Width;
+                        if (parts.Any(part => part < width))
                         {
-                            MessageBox.Show("Invalid input. None of the numbers can be 0.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Invalid input. None of the numbers can be smaller than the line width, which currently is set to " + width, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return; // Exit the method early
                         }
                         var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
