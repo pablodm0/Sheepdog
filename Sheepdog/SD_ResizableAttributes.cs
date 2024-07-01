@@ -9,6 +9,8 @@ using PointF = System.Drawing.PointF;
 using RectangleF = System.Drawing.RectangleF;
 using Size = System.Drawing.Size;
 using SizeF = System.Drawing.SizeF;
+using System.Drawing;
+
 
 namespace Grasshopper.Kernel.Attributes
 {
@@ -40,8 +42,9 @@ namespace Grasshopper.Kernel.Attributes
         {
           foreach (GH_Border borders2 in borders1)
           {
-            // Define a corner region as a circle with radius N units centered on the corner
-            float radius = 30.0f;
+            // Define a corner region as a circle with radius X units centered on the corner
+            float radius = 70f;
+
 
             // Create areas for corners
             bool isTopLeftCorner = Distance(e.CanvasLocation, new PointF(borders2.Region.Left, borders2.Region.Top)) <= radius;
@@ -86,8 +89,8 @@ label_8:
         {
             foreach (GH_Border ghBorder in borders)
             {
-                // Define a corner region as a circle with radius 10 units centered on the corner
-                float radius = 30f;
+                // Define a corner region as a circle with radius X units centered on the corner
+                float radius = 70f;
 
                 // Create areas for corners
                 bool isTopLeftCorner = Distance(e.CanvasLocation, new PointF(ghBorder.Region.Left, ghBorder.Region.Top)) <= radius;

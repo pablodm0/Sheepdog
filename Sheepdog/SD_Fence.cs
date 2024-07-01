@@ -52,6 +52,7 @@ namespace Sheepdog
             // First add our own field.
             writer.SetDouble("Width", ((SD_FenceAttributes)this.Attributes).Properties.Width);
             writer.SetDrawingColor("Colour", ((SD_FenceAttributes)this.Attributes).Properties.Colour);
+            writer.SetString("Linetype", ((SD_FenceAttributes)this.Attributes).Properties.Linetype);
             writer.SetString("Pattern", ((SD_FenceAttributes)this.Attributes).Properties.Pattern);
             writer.SetSingle("NameSize", ((SD_FenceAttributes)this.Attributes).Properties.NameSize);
             writer.SetString("NameVertical", ((SD_FenceAttributes)this.Attributes).Properties.NameVertical);
@@ -65,6 +66,7 @@ namespace Sheepdog
             // First read our own field.
             double width = reader.GetDouble("Width");
             Color colour = reader.GetDrawingColor("Colour");
+            string linetype = reader.GetString("Linetype");
             string pattern = reader.GetString("Pattern");
             float nameSize = reader.GetSingle("NameSize");
             string nameVertical = reader.GetString("NameVertical");
@@ -74,6 +76,7 @@ namespace Sheepdog
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Width = (float)width;
             tempProperties.Colour = colour;
+            tempProperties.Linetype = linetype;
             tempProperties.Pattern = pattern;
             tempProperties.NameSize = nameSize;
             tempProperties.NameVertical = nameVertical;
@@ -110,9 +113,9 @@ namespace Sheepdog
             ToolStripMenuItem toolStripMenuItemCustom = GH_DocumentObject.Menu_AppendItem((ToolStrip)toolStripMenuItemLinetype.DropDown, "Custom");
             // Create variable to hold current custom pattern to show it in the custom linetype text box 
             string currentCustom = "";
-            if (((SD_FenceAttributes)this.Attributes).Properties.Pattern.Contains("Custom"))
+            if (!((SD_FenceAttributes)this.Attributes).Properties.Pattern.Contains("Continuous"))
             {
-                currentCustom = ((SD_FenceAttributes)this.Attributes).Properties.Pattern.Replace("Custom: ", "");
+                currentCustom = ((SD_FenceAttributes)this.Attributes).Properties.Pattern.Replace("[", "").Replace("]", "");
             }
             // Add a text input item to the "Custom" option's dropdown for custom linetype input
             GH_DocumentObject.Menu_AppendTextItem(toolStripMenuItemCustom.DropDown, currentCustom, new GH_MenuTextBox.KeyDownEventHandler(this.Menu_LineCustomKeyDown), null, true, 200, true);
@@ -158,6 +161,29 @@ namespace Sheepdog
         public float WidthMedium = 8;
         public float WidthThick = 14;
 
+        private void UpdatePattern()
+        {
+            var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
+            if (tempProperties.Linetype == "Continuous")
+            {
+                tempProperties.Pattern = "[0,0,0,0]";
+            }
+            else
+            {
+                float w = ((SD_FenceAttributes)this.Attributes).Properties.Width;
+                if (tempProperties.Linetype == "Dashed")
+                {
+                    tempProperties.Pattern = $"[{3 * w},{3 * w},{3 * w},{3 * w}]";
+                }
+                else if (tempProperties.Linetype == "Dotted")
+                {
+                    tempProperties.Pattern = $"[{w},{w},{w},{w}]";
+                }
+            }
+            ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
+
+            Instances.RedrawCanvas();
+        }
         private void Menu_WidthThinClicked(object sender, EventArgs e)
         {
             RecordUndoEvent("Change Lineweight to " + WidthThin);
@@ -166,6 +192,7 @@ namespace Sheepdog
             tempProperties.Width = WidthThin;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
+            UpdatePattern();
             Instances.RedrawCanvas();
         }
         private void Menu_WidthMediumClicked(object sender, EventArgs e)
@@ -176,6 +203,7 @@ namespace Sheepdog
             tempProperties.Width = WidthMedium;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
+            UpdatePattern();
             Instances.RedrawCanvas();
         }
         private void Menu_WidthThickClicked(object sender, EventArgs e)
@@ -186,6 +214,7 @@ namespace Sheepdog
             tempProperties.Width = WidthThick;
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
+            UpdatePattern();
             Instances.RedrawCanvas();
         }
         private void Menu_WidthCustomKeyDown(object sender, KeyEventArgs e)
@@ -218,6 +247,7 @@ namespace Sheepdog
                             tempProperties.Width = width;
                             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
+                            UpdatePattern();
                             Instances.RedrawCanvas();
                         }
                     }
@@ -233,7 +263,8 @@ namespace Sheepdog
             RecordUndoEvent("Change Linetype to Continuous");
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
-            tempProperties.Pattern = "Continuous";
+            tempProperties.Linetype = "Continuous";
+            tempProperties.Pattern = "[0,0,0,0]";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
@@ -243,11 +274,12 @@ namespace Sheepdog
             RecordUndoEvent("Change Linetype to Dashed");
 
             float w = ((SD_FenceAttributes)this.Attributes).Properties.Width;
-
-            string pattern = "[10,10,10,10]";//$"[{3*w},{3*w},{3*w},{3*w}]";
+            
+            string pattern = $"[{3*w},{3*w},{3*w},{3*w}]";
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Pattern = pattern;
+            tempProperties.Linetype = "Dashed";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
@@ -258,10 +290,11 @@ namespace Sheepdog
 
             float w = ((SD_FenceAttributes)this.Attributes).Properties.Width;
 
-            string pattern = "[3,3,3,3]";//$"[{w},{w},{w},{w}]";
+            string pattern = $"[{w},{w},{w},{w}]";
 
             var tempProperties = ((SD_FenceAttributes)this.Attributes).Properties;
             tempProperties.Pattern = pattern;
+            tempProperties.Linetype = "Dotted";
             ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
             Instances.RedrawCanvas();
@@ -296,19 +329,21 @@ namespace Sheepdog
                         if (parts.Length == 1)
                         {
                             // Format as "Custom: A,A,A,A" if input is "A"
-                            pattern = $"Custom: {parts[0]},{parts[0]},{parts[0]},{parts[0]}";
+                            pattern = $"[{parts[0]},{parts[0]},{parts[0]},{parts[0]}]";
                         }
                         else if (parts.Length == 2)
                         {
                             // Format as "Custom: A,B,A,B" if input is "A,B"
-                            pattern = $"Custom: {parts[0]},{parts[1]},{parts[0]},{parts[1]}";
+                            pattern = $"[{parts[0]},{parts[1]},{parts[0]},{parts[1]}]";
                         }
                         else
                         {
                             // Format as "Custom: A,B,C,D" if input is "A,B,C,D"
-                            pattern = $"Custom: {parts[0]},{parts[1]},{parts[2]},{parts[3]}";
+                            pattern = $"[{parts[0]},{parts[1]},{parts[2]},{parts[3]}]";
                         }
+                        tempProperties.Linetype = "Custom";
                         tempProperties.Pattern = pattern;
+
                         ((SD_FenceAttributes)this.Attributes).Properties = tempProperties;
 
                         Instances.RedrawCanvas();

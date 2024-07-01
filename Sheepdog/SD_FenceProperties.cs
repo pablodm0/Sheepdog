@@ -29,7 +29,8 @@ namespace Grasshopper.Kernel.Special
             GH_SettingsServer settings = new GH_SettingsServer("Sheepdog");
             this.Width = settings.GetValue("Width", 8);
             this.Colour = settings.GetValue("Colour", Color.Black);
-            this.Pattern = settings.GetValue("Pattern", "Continuous");
+            this.Linetype = settings.GetValue("Linetype", "Continuous");
+            this.Pattern = settings.GetValue("Pattern", "[0,0,0,0]");
             this.NameSize = settings.GetValue("NameSize", 12);
             this.NameVertical = settings.GetValue("NameVertical", "Top"); //NameVerticalStates.Top;
             this.NameHorizontal = settings.GetValue("NameHorizontal", "Left"); //NameHorizontalStates.Left;
@@ -39,6 +40,8 @@ namespace Grasshopper.Kernel.Special
         public float Width { get; set; }
 
         public Color Colour { get; set; }
+
+        public string Linetype { get; set; }
 
         public string Pattern { get; set; }
 
