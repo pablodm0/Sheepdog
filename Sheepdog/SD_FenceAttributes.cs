@@ -5,9 +5,8 @@ using Grasshopper.Kernel.Attributes;
 using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel.Special;
-//using GH_IO.Serialization;
 using System;
-using System.Runtime.CompilerServices;
+
 
 namespace Sheepdog
 {
@@ -86,14 +85,17 @@ namespace Sheepdog
 
                 if (this.Selected)
                 {
+                    // Get the colour for a selected objects from the settings
+                    Color selectedColour = GH_Skin.palette_normal_selected.Fill;
+
                     // Draw a selection rectangle around the object
                     Pen penSelected = (Pen)pen.Clone();
                     penSelected.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-                    penSelected.Color = System.Drawing.Color.Yellow;
+                    penSelected.Color = selectedColour;//System.Drawing.Color.Yellow;
                     penSelected.Width = penSelected.Width + 3;
                     graphics.DrawRectangle(penSelected, this.Pivot.X, this.Pivot.Y, this.Bounds.Width, this.Bounds.Height);
                     penSelected.Dispose();
-                    //graphics.FillRectangle(System.Drawing.Brushes.Yellow, NameBBox);
+                    //graphics.FillRectangle(selectedColour, NameBBox);
                 }
 
                 // DRAW RECTANGLE
