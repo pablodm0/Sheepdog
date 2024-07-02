@@ -6,15 +6,14 @@ using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel.Special;
 using System;
+using System.Collections.Generic;
 
 
 namespace Sheepdog
 {
     public class SD_FenceAttributes : SD_ResizableAttributes<SD_Fence>
     {
-        //private Grasshopper.Kernel.Special.GH_Markup mark = new Grasshopper.Kernel.Special.GH_Markup();
         private GH_Document ghDocument;
-        //public DisplayExpiredEventHandler DisplayExpiredHandler;
         public SD_FenceAttributes(SD_Fence owner) : base(owner)
         {
             // Set value to ghDocument
@@ -41,18 +40,19 @@ namespace Sheepdog
         }
 
         public SD_FenceProperties Properties { get; set; }
-
         protected System.Drawing.Size DefaultSize => new System.Drawing.Size(300, 300);
-
         protected override System.Drawing.Size MinimumSize => new System.Drawing.Size(150, 150);
-        protected override System.Windows.Forms.Padding SizingBorders => new System.Windows.Forms.Padding(6);
+        protected override System.Windows.Forms.Padding SizingBorders => new System.Windows.Forms.Padding(1);
 
         //protected RectangleF NameBBox { get; set; }
 
         protected override void Render(GH_Canvas canvas, System.Drawing.Graphics graphics, GH_CanvasChannel channel)
         {
             GH_Document ghDocument = this.Owner.OnPingDocument();
-            float zoomLevel = canvas.Viewport.Zoom;
+
+            // Update the value of resizeHandleRadius to adjust to new zoom level 
+            this.resizeHandleRadius = 50f / (canvas.Viewport.Zoom);
+
             if (ghDocument != null)
             {
                 // PREPARE DRAWING TOOLS
@@ -77,6 +77,11 @@ namespace Sheepdog
                 System.Drawing.Font font = new System.Drawing.Font("Microsoft Sans Serif Regular", this.Properties.NameSize); // Adjust font and size
                 graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias; // Enable anti-aliasing for smoother text rendering
                 graphics.DrawString(this.Owner.NickName, font, brush, textLocation, format);
+
+                /*font = new System.Drawing.Font("Microsoft Sans Serif Regular", 200); // Adjust font and size
+                graphics.DrawString(this.resizeHandleRadius.ToString(), font, brush, 0, 0 , format);
+                graphics.DrawString((15f / canvas.Viewport.Zoom).ToString(), font, brush, 0, 300 , format);*/
+
                 //System.Drawing.Size size = new System.Drawing.Size(5000, 5000);
                 //SizeF textSize = graphics.MeasureString(this.Owner.NickName, font, size, format, out int charactersFitted, out int linesFilled);
                 //NameBBox = new RectangleF(textLocation, textSize);
@@ -109,7 +114,7 @@ namespace Sheepdog
                 if (this.Selected)
                 {
                     // Draw circles in the corners
-                    float radius = 15 / zoomLevel;
+                    float radius = 15f / canvas.Viewport.Zoom;
                     float centerX = this.Pivot.X - radius;
                     float centerY = this.Pivot.Y - radius;
                     graphics.FillEllipse(System.Drawing.Brushes.White, centerX, centerY, radius * 2, radius * 2); // Top-left corner
@@ -125,6 +130,20 @@ namespace Sheepdog
                     graphics.FillEllipse(System.Drawing.Brushes.White, this.Pivot.X - radius, middleY - radius, radius * 2, radius * 2); // Left edge
                     graphics.FillEllipse(System.Drawing.Brushes.White, this.Pivot.X + this.Bounds.Width - radius, middleY - radius, radius * 2, radius * 2); // Right edge
                 }
+
+                List<GH_Border> borders = GH_Border.CreateBorders(this.Bounds, this.SizingBorders);
+                List<System.Drawing.Brush> brushes = new List<System.Drawing.Brush> { System.Drawing.Brushes.Red, System.Drawing.Brushes.Yellow, System.Drawing.Brushes.Green, System.Drawing.Brushes.Blue, System.Drawing.Brushes.Purple , System.Drawing.Brushes.Fuchsia , System.Drawing.Brushes.Firebrick, System.Drawing.Brushes.Aqua };
+
+                /*int i = 0;
+                foreach (GH_Border ghBorder in borders)
+                {
+                    System.Drawing.Brush brush_ = brushes[i % brushes.Count];
+                    Pen pen_ = new Pen(brush_, 1);
+                    graphics.DrawRectangle(pen_, ghBorder.Region.Left, ghBorder.Region.Top, ghBorder.Region.Width, ghBorder.Region.Height);
+                    graphics.FillEllipse(brush_, ghBorder.Region.Left, ghBorder.Region.Top, 2f, 2f); // Top-left corner
+                    i++;
+                }
+                graphics.FillEllipse(System.Drawing.Brushes.Blue, this.Pivot.X, this.Pivot.Y, 1f, 1f); // Top-left corner*/
             }
             //base.Render(canvas, graphics, channel); // this controls whether the base component is shown or not. 
         }

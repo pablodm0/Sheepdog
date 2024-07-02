@@ -32,6 +32,9 @@ namespace Grasshopper.Kernel.Attributes
 
     protected abstract Padding SizingBorders { get; }
 
+
+    public float resizeHandleRadius { get; set; }
+
     public override GH_ObjectResponse RespondToMouseDown(GH_Canvas sender, GH_CanvasMouseEvent e)
     {
       GH_ObjectResponse mouseDown;
@@ -42,9 +45,10 @@ namespace Grasshopper.Kernel.Attributes
         {
           foreach (GH_Border borders2 in borders1)
           {
-            // Define a corner region as a circle with radius X units centered on the corner
-            float radius = 70f;
 
+            // Define a corner region as a circle with radius X units centered on the corner
+            float radius = this.resizeHandleRadius;
+            
 
             // Create areas for corners
             bool isTopLeftCorner = Distance(e.CanvasLocation, new PointF(borders2.Region.Left, borders2.Region.Top)) <= radius;
@@ -90,7 +94,7 @@ label_8:
             foreach (GH_Border ghBorder in borders)
             {
                 // Define a corner region as a circle with radius X units centered on the corner
-                float radius = 70f;
+                float radius = this.resizeHandleRadius;
 
                 // Create areas for corners
                 bool isTopLeftCorner = Distance(e.CanvasLocation, new PointF(ghBorder.Region.Left, ghBorder.Region.Top)) <= radius;
@@ -160,7 +164,7 @@ label_13:
       return mouseUp;
     }
     // Helper method to calculate distance between two points
-    private float Distance(PointF point1, PointF point2)
+    protected float Distance(PointF point1, PointF point2)
     {
         float dx = point1.X - point2.X;
         float dy = point1.Y - point2.Y;
