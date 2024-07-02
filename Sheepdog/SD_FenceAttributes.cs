@@ -52,6 +52,7 @@ namespace Sheepdog
 
             // Update the value of resizeHandleRadius to adjust to new zoom level 
             this.resizeHandleRadius = 50f / (canvas.Viewport.Zoom);
+            this.zoomLevel = canvas.Viewport.Zoom;
 
             if (ghDocument != null)
             {
@@ -202,7 +203,7 @@ namespace Sheepdog
         public override bool IsPickRegion(PointF point) // this function defines the pick region when clicking
         {
 
-            float width = (this.Properties.Width / 2) + 20; // define half the lineweight to inflate by this amount
+            float width = (this.Properties.Width / 2) + 20/this.zoomLevel ; // define half the lineweight plus tolerance to inflate by this amount
 
             // Create a copy of the bounds
             RectangleF outerBounds = this.Bounds;

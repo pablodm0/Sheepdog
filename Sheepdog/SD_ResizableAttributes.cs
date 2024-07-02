@@ -35,6 +35,8 @@ namespace Grasshopper.Kernel.Attributes
 
     public float resizeHandleRadius { get; set; }
 
+    public float zoomLevel { get; set; }
+
     public override GH_ObjectResponse RespondToMouseDown(GH_Canvas sender, GH_CanvasMouseEvent e)
     {
       GH_ObjectResponse mouseDown;
